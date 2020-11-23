@@ -21,13 +21,13 @@ class PracticeApi extends Component {
       .catch(error => {
           console.log(error)
       })
-      this.fetchData()
+    //   this.fetchData()
      }
 
     fetchData() {
         axios.get('https://admin.barikoi.xyz:8090/statistics/mapper?dateFrom=2020-11-09&dateTill=2020-11-11',{ headers: {Authorization:'Bearer' + localStorage.getItem('token')}})
         .then(response => {
-            console.log(response.data.data);
+            // console.log(response.data.data);
             this.setState({
                 allData:response.data.data,
                 mainData:response.data.data.state
