@@ -21,13 +21,11 @@ class PracticeApi extends Component {
       .catch(error => {
           console.log(error)
       })
-    //   this.fetchData()
      }
 
     fetchData() {
         axios.get('https://admin.barikoi.xyz:8090/statistics/mapper?dateFrom=2020-11-09&dateTill=2020-11-11',{ headers: {Authorization:'Bearer' + localStorage.getItem('token')}})
         .then(response => {
-            // console.log(response.data.data);
             this.setState({
                 allData:response.data.data,
                 mainData:response.data.data.state
@@ -39,22 +37,10 @@ class PracticeApi extends Component {
        }
 
     render() { 
-        const data = this.state.allData.map(data => {
-            return(
-            <div key={data.date}>
-                <p>{data.date}</p>
-                <p>ID: {data.state[1].id}</p>
-                <p>Name: {data.state[1].name}</p>
-                <p>Place Count: {data.state[1].p_count}</p>
-            </div>
-            )
-        })
+        
         return ( 
             <div>
                 <Example />
-                {/* <h2>
-                    {data}
-                </h2> */}
             </div>
          );
     }

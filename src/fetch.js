@@ -13,11 +13,10 @@ class Fetch extends Component {
         dates.map((users) => {
             users.state.map((user) => {
                 let exist = this.exists(user.id,users_container);
-                // console.log(exist);
 
                 if(exist){
                    let found_user = users_container.find((element) => {
-                        return element.user_id == user.id
+                        return element.user_id === user.id
                     });
                     let total_added = user.p_count + user.v_count;
                     let amount = this.calculation(total_added);
@@ -30,6 +29,8 @@ class Fetch extends Component {
                 }else{
                     let total_added = user.p_count + user.v_count;
                     let amount = this.calculation(total_added);
+                    let TaAmount = this.TaCalculation(total_added);
+                    console.log(TaAmount);
                     users_container.push({
                         'user_id' : user.id,
                         'user_name' : user.name,
@@ -44,15 +45,13 @@ class Fetch extends Component {
             });
         });
         this.setState({users: users_container});
-       console.log(this.state.users);
      }
 
      exists(id,users)
      {
-         console.log(id);
          let response = false;
         for(let i = 0; i < users.length; i++){
-            if(users[i].user_id == id){
+            if(users[i].user_id === id){
                 response = true;
             }
         }
@@ -60,13 +59,23 @@ class Fetch extends Component {
      }
      calculation(added_data) {
         if(added_data > 0 && added_data <= 250){
-            return added_data * 1.20;
+            return Math.ceil(added_data * 1.20);
         }
         if(added_data > 250 && added_data <= 299){
-            return added_data * 1.35;
+            let data;
+            let newData;
+            return (
+                data =  added_data - 250,
+                newData = Math.ceil(data * 1.35 + 300)
+            )
         }
         if(added_data >= 300){
-            return added_data * 1.50;
+            return Math.ceil(added_data * 1.50);
+        }
+     }
+     TaCalculation(added_data) {
+        if(added_data >= 200) {
+            return 50;
         }
      }
      
@@ -78,7 +87,6 @@ class Fetch extends Component {
             users: response.data.data
         })
         this.sortData(response.data.data);
-        // console.log(this.state.users);
       })
       .catch(err => {
         console.log(err);
@@ -107,19 +115,18 @@ class Fetch extends Component {
 
         return ( 
             <div>
-                <button onClick={()=>this.fetchData(a, b)}>Click</button>
-                <table className="table table-bordered">
+                <button type="button" className="btn btn-success my-2" onClick={()=>this.fetchData(a, b)}>Set Date</button>
+                <table className="table table-bordered text-center">
                 <thead>
                     <tr>
-                        <th>ID</th>
-                    {/* <th scope="col"></th> */}
-                    <th scope="col">Name</th>
-                    <th scope="col">Place Added</th>
-                    <th scope="col">Vault Added</th>
-                    <th scope="col">Total Added</th>
-                    <th scope="col">Add History</th>
-                    <th>Cash History</th>
-                    <th scope="col">Amount</th>
+                        <th scope="col">ID</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Place Added</th>
+                        <th scope="col">Vault Added</th>
+                        <th scope="col">Total Added</th>
+                        <th scope="col">Add History</th>
+                        <th scope="col">Cash History</th>
+                        <th scope="col">Amount</th>
                     </tr>
                 </thead>
                 <tbody>
