@@ -5,8 +5,7 @@ class Fetch extends Component {
     state = { 
         users: []
      }
-
-
+     
      sortData(dates)
      {
         let users_container = [];
@@ -20,17 +19,19 @@ class Fetch extends Component {
                     });
                     let total_added = user.p_count + user.v_count;
                     let amount = this.calculation(total_added);
+                    let TaAmount = this.TaCalculation(total_added);
                     found_user.p_count += user.p_count;
                     found_user.v_count += user.v_count;
                     found_user.total_count += total_added;
                     found_user.add_history = found_user.add_history +'+'+ total_added;
                     found_user.cash_history = found_user.cash_history +'+'+ amount;
-                    found_user.amount += amount;
+                    found_user.amount = amount;
                 }else{
                     let total_added = user.p_count + user.v_count;
                     let amount = this.calculation(total_added);
                     let TaAmount = this.TaCalculation(total_added);
-                    console.log(TaAmount);
+                    let total_Amount = amount + TaAmount;
+                    // console.log(TaAmount);
                     users_container.push({
                         'user_id' : user.id,
                         'user_name' : user.name,
@@ -39,7 +40,7 @@ class Fetch extends Component {
                         'total_count' : total_added,
                         'add_history' : total_added,
                         'cash_history' : amount,
-                        'amount' : amount 
+                        'amount' : total_Amount
                     });
                 }
             });
@@ -58,23 +59,23 @@ class Fetch extends Component {
         return response;
      }
      calculation(added_data) {
-        if(added_data > 0 && added_data <= 250){
-            return Math.ceil(added_data * 1.20);
-        }
-        if(added_data > 250 && added_data <= 299){
-            let data;
-            let newData;
-            return (
-                data =  added_data - 250,
-                newData = Math.ceil(data * 1.35 + 300)
-            )
-        }
-        if(added_data >= 300){
+        // if(added_data > 0 && added_data <= 250){
+        //     return Math.ceil(added_data * 1.20);
+        // }
+        // if(added_data > 250 && added_data <= 299){
+        //     let data;
+        //     let newData;
+        //     return (
+        //         data =  added_data - 250,
+        //         newData = Math.ceil(data * 1.35 + 300)
+        //     )
+        // }
+        if(added_data > 0){
             return Math.ceil(added_data * 1.50);
         }
      }
      TaCalculation(added_data) {
-        if(added_data >= 200) {
+        if(added_data > 0) {
             return 50;
         }
      }
@@ -86,12 +87,14 @@ class Fetch extends Component {
         this.setState({
             users: response.data.data
         })
+        console.log(this.state.users);
         this.sortData(response.data.data);
       })
       .catch(err => {
         console.log(err);
       })
     }
+    
     render() { 
     const startSelect = this.props.Start;
     const endSelect = this.props.End;
@@ -112,7 +115,7 @@ class Fetch extends Component {
          </tr>   
         )
     })
-
+    // console.log(this.state.users);
         return ( 
             <div>
                 <button type="button" className="btn btn-success my-2" onClick={()=>this.fetchData(a, b)}>Set Date</button>
@@ -125,12 +128,18 @@ class Fetch extends Component {
                         <th scope="col">Vault Added</th>
                         <th scope="col">Total Added</th>
                         <th scope="col">Add History</th>
-                        <th scope="col">Cash History</th>
+                        <th scope="col">Without Ta Cash</th>
                         <th scope="col">Amount</th>
                     </tr>
                 </thead>
                 <tbody>
-                {data}
+                {
+                    // loading ?
+                    // <Spinner />
+                    // :
+                    // data
+                    data
+                }
                 </tbody>
                 </table>
                 
